@@ -5,13 +5,15 @@ import AddNewServices from './AddNewServices';
 import ServiceDetails from './ServiceDetails';
 import Profile from './Profile';
 import firestore from '@react-native-firebase/firestore';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Stack = createStackNavigator();
 
-const HomeScreen = ({ navigation}) => {
+const HomeScreen = ({ navigation, route }) => {
     const [services, setServices] = useState([]);
     const [username, setUsername] = useState('');
+    const userEmail = route.params?.userName;
+    
+    console.log("HomeScreen userEmail:", userEmail); // Debug log
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -25,12 +27,26 @@ const HomeScreen = ({ navigation}) => {
         };
 
         const fetchUserData = async () => {
+            if (!userEmail) {
+                console.log('No user email provided');
+                return;
+            }
+
             try {
-                const userQuerySnapshot = await firestore().collection('user').get();
-                userQuerySnapshot.forEach(doc => {
-                    const user = doc.data();
-                    setUsername(user.name);
-                });
+                console.log('Fetching user data for email:', userEmail); // Debug log
+                const userSnapshot = await firestore()
+                    .collection('user')
+                    .where('email', '==', userEmail)
+                    .get();
+
+                if (!userSnapshot.empty) {
+                    const userData = userSnapshot.docs[0].data();
+                    console.log('Found user data:', userData); // Debug log
+                    setUsername(userData.name);
+                } else {
+                    console.log('User document does not exist for email:', userEmail);
+                    setUsername('User');
+                }
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
@@ -38,18 +54,10 @@ const HomeScreen = ({ navigation}) => {
 
         fetchServices();
         fetchUserData();
-
-        const unsubscribe = navigation.addListener('focus', () => {
-            fetchServices();
-            fetchUserData();
-        });
-
-        return unsubscribe;
-    }, [navigation]);
-
+    }, [userEmail]);
 
     const handleServicePress = (service) => {
-        navigation.navigate('ServiceDetails', { service });
+        navigation.navigate('ServiceDetails', { service, userEmail });
     };
 
     const renderItem = ({ item, index }) => (
@@ -65,7 +73,7 @@ const HomeScreen = ({ navigation}) => {
         <View style={styles.container}>
             <View style={styles.upperView}>
                 <Text style={styles.username}>{username}</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Profile', { userEmail })}>
                     <View style={styles.iconContainer}>
                         <Image
                             source={require('../../image/logo_user.jpg')}
@@ -74,7 +82,6 @@ const HomeScreen = ({ navigation}) => {
                     </View>
                 </TouchableOpacity>
             </View>
-
 
             <View style={styles.contentContainer}>
                 <View style={styles.logoContainer}>
@@ -87,7 +94,10 @@ const HomeScreen = ({ navigation}) => {
 
                 <View style={styles.header}>
                     <Text style={styles.headerText}>DANH SÁCH DỊCH VỤ</Text>
-                    <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddNewServices')}>
+                    <TouchableOpacity 
+                        style={styles.addButton} 
+                        onPress={() => navigation.navigate('AddNewServices', { userEmail })}
+                    >
                         <Text style={styles.buttonText}>+</Text>
                     </TouchableOpacity>
                 </View>
@@ -104,12 +114,15 @@ const HomeScreen = ({ navigation}) => {
 };
 
 const Home = ({ route }) => {
+    const userName = route.params?.userName;
+    console.log("Home wrapper userName:", userName); // Debug log
+
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen
-                name="Home"
+                name="HomeScreen"
                 component={HomeScreen}
-                initialParams={route.params}
+                initialParams={{ userName: userName }}
             />
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="AddNewServices" component={AddNewServices} />
@@ -121,61 +134,74 @@ const Home = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#F5EFFF',
     },
     upperView: {
         flexDirection: 'row',
-        backgroundColor: 'white',
-        paddingVertical: 10,
+        backgroundColor: '#A594F9',
+        paddingVertical: 20,
         paddingHorizontal: 20,
         alignItems: 'center',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        elevation: 5,
+    },
+    username: {
+        color: '#F5EFFF',
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginRight: 'auto',
+    },
+    iconContainer: {
+        backgroundColor: '#E5D9F2',
+        padding: 8,
+        borderRadius: 20,
+        elevation: 3,
     },
     contentContainer: {
         flex: 1,
         padding: 20,
     },
-    input: {
-        height: 40,
-        width: 350,
-        marginBottom: 10,
-        paddingHorizontal: 10,
-        borderRadius: 10,
-        padding: 10
-    },
     logoContainer: {
-        justifyContent: 'center',
         alignItems: 'center',
+        marginVertical: 20,
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginBottom: 20,
     },
     headerText: {
         flex: 1,
-        fontSize: 18,
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#A594F9',
     },
     addButton: {
-        backgroundColor: 'red',
-        borderRadius: 50,
-        width: 40,
-        height: 40,
+        backgroundColor: '#A594F9',
+        borderRadius: 25,
+        width: 50,
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 10,
+        elevation: 3,
     },
     buttonText: {
-        fontSize: 20,
-        color: 'white',
+        fontSize: 24,
+        color: '#F5EFFF',
+    },
+    input: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 15,
+        marginBottom: 15,
+        elevation: 2,
+        borderLeftWidth: 5,
+        borderLeftColor: '#CDC1FF',
     },
     itemContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-    },
-    username: {
-        marginRight: 'auto',
-        marginLeft: 10,
-    },
-    iconContainer: {
-        padding: 5,
+        padding: 15,
     },
 });
 

@@ -6,7 +6,6 @@ const Customer = () => {
     const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
-        // Effect hook để lấy dữ liệu từ Firestore khi màn hình được tạo
         const fetchBookings = async () => {
             try {
                 const snapshot = await firestore().collection('bookings').get();
@@ -20,41 +19,107 @@ const Customer = () => {
         fetchBookings();
     }, []);
 
+    const renderBookingItem = ({ item }) => (
+        <View style={styles.bookingCard}>
+            <View style={styles.bookingHeader}>
+                <Text style={styles.serviceName}>{item.serviceName}</Text>
+                <Text style={styles.price}>{item.prices} VND</Text>
+            </View>
+            <View style={styles.bookingDetails}>
+                <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Ngày:</Text>
+                    <Text style={styles.detailValue}>{item.bookingDate}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Giờ:</Text>
+                    <Text style={styles.detailValue}>{item.bookingTime}</Text>
+                </View>
+            </View>
+        </View>
+    );
+
     return (
         <View style={styles.container}>
-
+            <View style={styles.header}>
+                <Text style={styles.headerText}>Đơn đặt</Text>
+            </View>
             <FlatList
                 data={bookings}
-                renderItem={({ item }) => (
-                    <View style={styles.item}>
-                        <Text>Service Name: {item.serviceName}</Text>
-                        <Text>Prices: {item.prices}</Text>
-                        <Text>Booking Date: {item.bookingDate}</Text>
-                        <Text>Booking Time: {item.bookingTime}</Text>
-
-                        {/* Thêm các trường dữ liệu khác tùy thuộc vào cấu trúc của bảng bookings */}
-                    </View>
-                )}
+                renderItem={renderBookingItem}
                 keyExtractor={(item, index) => index.toString()}
+                contentContainerStyle={styles.listContainer}
             />
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#F5EFFF',
     },
-    title: {
+    header: {
+        backgroundColor: '#A594F9',
+        padding: 20,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        elevation: 5,
+    },
+    headerText: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        color: '#F5EFFF',
+        textAlign: 'center',
     },
-    item: {
+    listContainer: {
+        padding: 20,
+    },
+    bookingCard: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 15,
+        padding: 15,
+        marginBottom: 15,
+        elevation: 2,
+        borderLeftWidth: 5,
+        borderLeftColor: '#CDC1FF',
+    },
+    bookingHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         marginBottom: 10,
+    },
+    serviceName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#A594F9',
+    },
+    price: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#A594F9',
+        backgroundColor: '#E5D9F2',
+        padding: 8,
+        borderRadius: 10,
+    },
+    bookingDetails: {
+        backgroundColor: '#F5EFFF',
+        borderRadius: 10,
+        padding: 10,
+    },
+    detailRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 5,
+    },
+    detailLabel: {
+        color: '#666',
+        fontSize: 14,
+    },
+    detailValue: {
+        color: '#333',
+        fontSize: 14,
+        fontWeight: '500',
     },
 });
 

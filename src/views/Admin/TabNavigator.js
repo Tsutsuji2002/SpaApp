@@ -5,21 +5,21 @@ import HomeScreen from './Home';
 import TransactionScreen from './Transaction';
 import CustomerScreen from './Customer';
 import SettingsScreen from './Settings';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Image, Text } from 'react-native';
-
+import { Image } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const TabNavigator = ({ navigation, route }) => {
-    const userName = route.params?.userName || "Default Name";
+const TabNavigator = ({ route }) => {
+    const userName = route.params?.userName;
+    console.log("TabNavigator userName:", userName); // Debug log
 
     return (
         <Tab.Navigator screenOptions={{ headerShown: false }}>
             <Tab.Screen
-                name={"Home"}
+                name="Home"
                 component={HomeStackScreen}
+                initialParams={{ userName: userName }} // Pass userName to HomeStackScreen
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Image
@@ -27,12 +27,12 @@ const TabNavigator = ({ navigation, route }) => {
                             style={{ width: 25, height: 25 }}
                         />
                     ),
-
                 }}
             />
             <Tab.Screen
                 name="Transaction"
                 component={TransactionStackScreen}
+                initialParams={{ userName: userName }}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Image
@@ -45,6 +45,7 @@ const TabNavigator = ({ navigation, route }) => {
             <Tab.Screen
                 name="Customer"
                 component={CustomerStackScreen}
+                initialParams={{ userName: userName }}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Image
@@ -57,6 +58,7 @@ const TabNavigator = ({ navigation, route }) => {
             <Tab.Screen
                 name="Settings"
                 component={SettingsStackScreen}
+                initialParams={{ userName: userName }}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Image
@@ -70,11 +72,20 @@ const TabNavigator = ({ navigation, route }) => {
     );
 };
 
-const HomeStackScreen = () => (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={HomeScreen} />
-    </Stack.Navigator>
-);
+const HomeStackScreen = ({ route }) => {
+    const userName = route.params?.userName;
+    console.log("HomeStackScreen userName:", userName); // Debug log
+
+    return (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen 
+                name="HomeScreen"
+                component={HomeScreen}
+                initialParams={{ userName: userName }}
+            />
+        </Stack.Navigator>
+    );
+};
 
 const TransactionStackScreen = () => (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

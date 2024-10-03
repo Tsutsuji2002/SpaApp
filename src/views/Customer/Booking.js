@@ -46,8 +46,8 @@ const Booking = ({ route }) => {
                     style={{ width: 25, height: 25 }}
                 />
             </TouchableOpacity>
-            <Text style={styles.text}>Service Name: {serviceName}</Text>
-            <Text style={styles.text}>Prices: {prices}</Text>
+            <Text style={styles.text}>Tên dịch vụ: {serviceName}</Text>
+            <Text style={styles.text}>Giá: {prices}</Text>
             {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
 
             <TextInput
@@ -73,47 +73,84 @@ const Booking = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#F5EFFF',
         padding: 20,
     },
-    text: {
-        fontSize: 18,
-        marginBottom: 10,
-    },
-    image: {
-        width: 200,
-        height: 200,
-        marginTop: 20,
-    },
-    input: {
-        width: '100%',
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        marginTop: 20,
+    header: {
+        backgroundColor: '#A594F9',
+        padding: 20,
+        borderRadius: 15,
+        marginBottom: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     backButton: {
-        position: 'absolute',
-        top: 10,
-        left: 10,
+        backgroundColor: '#E5D9F2',
+        padding: 8,
+        borderRadius: 12,
+        marginRight: 15,
+    },
+    headerTitle: {
+        color: '#F5EFFF',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    contentCard: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 20,
+        padding: 20,
+        elevation: 3,
+        borderLeftWidth: 5,
+        borderLeftColor: '#CDC1FF',
+        marginBottom: 20,
+    },
+    text: {
+        fontSize: 16,
+        marginBottom: 10,
+        color: '#333',
+    },
+    serviceText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#A594F9',
+        marginBottom: 5,
+    },
+    priceText: {
+        fontSize: 16,
+        color: '#A594F9',
+        backgroundColor: '#E5D9F2',
+        padding: 8,
+        borderRadius: 10,
+        alignSelf: 'flex-start',
+    },
+    image: {
+        width: '100%',
+        height: 200,
+        borderRadius: 15,
+        marginVertical: 15,
+    },
+    input: {
+        backgroundColor: '#F5EFFF',
+        padding: 15,
+        borderRadius: 12,
+        marginTop: 15,
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: '#CDC1FF',
     },
     addButton: {
-        backgroundColor: 'red',
-        borderRadius: 10,
-        height: 40,
+        backgroundColor: '#A594F9',
+        borderRadius: 15,
+        padding: 15,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 20,
-        width: 200,
-        height: 35,
+        elevation: 3,
     },
     buttonText: {
-        color: 'white',
-        fontSize: 16,
+        color: '#F5EFFF',
+        fontSize: 18,
         fontWeight: 'bold',
     },
 });
-
 export default Booking;

@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const Transaction = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Transaction</Text>
+            <Text style={styles.title}>Hiện chưa triển khai tính năng này!</Text>
         </View>
     );
 }

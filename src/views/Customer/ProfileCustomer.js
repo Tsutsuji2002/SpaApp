@@ -1,30 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const ProfileCustomer = () => {
-    const navigation = useNavigation();
+const ProfileCustomer = ({ route, navigation }) => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const userEmail = route.params?.userEmail;
 
     useEffect(() => {
         const fetchUserData = async () => {
+            if (!userEmail) {
+                console.log('No user email provided');
+                setLoading(false);
+                return;
+            }
+
             try {
-                const user = auth().currentUser;
+                const userSnapshot = await firestore()
+                    .collection('user')
+                    .where('email', '==', userEmail)
+                    .get();
 
-                if (user) {
-                    const userQuerySnapshot = await firestore()
-                        .collection('user')
-                        .where('email', '==', user.email)
-                        .get();
-
-                    if (!userQuerySnapshot.empty) {
-                        const userData = userQuerySnapshot.docs[0].data();
-                        setUserData(userData);
-                    }
+                if (!userSnapshot.empty) {
+                    const userData = userSnapshot.docs[0].data();
+                    setUserData(userData);
+                } else {
+                    console.log('No user found for the provided email.');
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -34,57 +36,120 @@ const ProfileCustomer = () => {
         };
 
         fetchUserData();
-    }, []);
+    }, [userEmail]);
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconContainer}>
-                <Image
-                    source={require('../../image/back_arrow.jpg')} 
-                    style={{ width: 25, height: 25 }}
-                />
-            </TouchableOpacity>
+            <View style={styles.header}>
+                <TouchableOpacity 
+                    style={styles.backButton}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Icon name="arrow-left" size={24} color="#fff" />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Hồ sơ khách hàng</Text>
+            </View>
 
-            <View style={styles.content}>
+            <View style={styles.profileContainer}>
+                <View style={styles.avatarContainer}>
+                    <Image
+                        source={require('../../image/logo_user.jpg')}
+                        style={styles.avatarImage}
+                    />
+                </View>
+
                 {loading ? (
-                    <ActivityIndicator size="large" color="#0000ff" />
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="large" color="#1e90ff" />
+                    </View>
                 ) : (
-                    <>
-                        <Text style={styles.title}>Thông tin tài khoản</Text>
-                        <Text style={styles.text}>Email: {userData?.email}</Text>
-                        <Text style={styles.text}>Quyền: {userData?.role}</Text>
-                        <Text style={styles.text}>User: {userData?.name}</Text>
-                    </>
+                    <View style={styles.infoContainer}>
+                        <View style={styles.infoCard}>
+                            <Text style={styles.infoLabel}>Tên</Text>
+                            <Text style={styles.infoValue}>{userData?.name || 'N/A'}</Text>
+                        </View>
+
+                        <View style={styles.infoCard}>
+                            <Text style={styles.infoLabel}>Email</Text>
+                            <Text style={styles.infoValue}>{userData?.email || 'N/A'}</Text>
+                        </View>
+
+                        <View style={styles.infoCard}>
+                            <Text style={styles.infoLabel}>Vai trò</Text>
+                            <Text style={styles.infoValue}>{userData?.role || 'N/A'}</Text>
+                        </View>
+                    </View>
                 )}
             </View>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#f0f0f0',
     },
-    iconContainer: {
-        position: 'absolute',
-        top: 20,
-        left: 20,
-        zIndex: 1,
+    header: {
+        backgroundColor: '#1e90ff',
+        padding: 20,
+        paddingTop: 40,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        elevation: 5,
     },
-    content: {
+    backButton: {
+        padding: 10,
+    },
+    headerTitle: {
+        color: '#fff',
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginLeft: 20,
+    },
+    profileContainer: {
+        flex: 1,
+        padding: 20,
+    },
+    avatarContainer: {
+        alignItems: 'center',
+        marginVertical: 20,
+    },
+    avatarImage: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        borderWidth: 3,
+        borderColor: '#1e90ff',
+    },
+    loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
+    infoContainer: {
+        padding: 20,
     },
-    text: {
+    infoCard: {
+        backgroundColor: '#fff',
+        borderRadius: 15,
+        padding: 20,
+        marginBottom: 15,
+        elevation: 2,
+        borderLeftWidth: 5,
+        borderLeftColor: '#1e90ff',
+    },
+    infoLabel: {
+        fontSize: 14,
+        color: '#666',
+        marginBottom: 5,
+    },
+    infoValue: {
         fontSize: 18,
-        marginBottom: 10,
+        fontWeight: '600',
+        color: '#333',
     },
 });
 

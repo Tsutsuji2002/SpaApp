@@ -4,21 +4,21 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeCustomer from './HomeCustomer';
 import AppoitmentCustomer from './AppoitmentCustomer';
 import SettingsCustomer from './SettingsCustomer';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Image, Text } from 'react-native';
-
+import { Image } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const TabCustomer = ({ navigation, route }) => {
-    const userName = route.params?.userName || "Default Name";
+const TabCustomer = ({ route }) => {
+    const userName = route.params?.userName;
+    console.log("TabCustomer userName:", userName); // Debug log
 
     return (
         <Tab.Navigator screenOptions={{ headerShown: false }}>
             <Tab.Screen
-                name={"HomeCustomer"}
+                name="HomeCustomer"
                 component={HomeCustomer}
+                initialParams={{ userName: userName }} // Pass userName to HomeCustomer
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Image
@@ -26,12 +26,12 @@ const TabCustomer = ({ navigation, route }) => {
                             style={{ width: 25, height: 25 }}
                         />
                     ),
-
                 }}
             />
             <Tab.Screen
                 name="AppoitmentCustomer"
                 component={AppoitmentCustomer}
+                initialParams={{ userName: userName }}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Image
@@ -44,6 +44,7 @@ const TabCustomer = ({ navigation, route }) => {
             <Tab.Screen
                 name="SettingsCustomer"
                 component={SettingsCustomer}
+                initialParams={{ userName: userName }}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Image

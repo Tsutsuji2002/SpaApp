@@ -15,7 +15,7 @@ const AddNewServices = ({ navigation }) => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.errorMessage) {
-                console.log('ImagePicker Error: ', response.errorMessage);
+                console.log('Lỗi ImagePicker: ', response.errorMessage);
             } else if (response.assets && response.assets.length > 0) {
                 const selectedImage = response.assets[0];
                 setImageUri(selectedImage.uri);
@@ -33,7 +33,7 @@ const AddNewServices = ({ navigation }) => {
 
     const addService = async () => {
         if (service.trim() === '' || prices.trim() === '') {
-            Alert.alert('Error', 'Please fill in all fields');
+            Alert.alert('Error', 'Vui lòng điền vào tất cả các trường');
             return;
         }
 
@@ -43,7 +43,7 @@ const AddNewServices = ({ navigation }) => {
                 imageUrl = await uploadImage(imageUri);
             } catch (error) {
                 console.error('Error uploading image:', error);
-                Alert.alert('Error', 'An error occurred while uploading the image');
+                Alert.alert('Error', 'Đã xảy ra lỗi khi tải hình ảnh lên');
                 return;
             }
         }
@@ -57,12 +57,11 @@ const AddNewServices = ({ navigation }) => {
                     imageUrl,
                 });
 
-            // Show success message and navigate back to the Home screen
-            Alert.alert('Success', 'Service added successfully');
+            Alert.alert('Success', 'Dịch vụ đã được thêm thành công');
             navigation.navigate('Home');
         } catch (error) {
             console.error('Error adding service:', error);
-            Alert.alert('Error', 'An error occurred while adding the service');
+            Alert.alert('Error', 'Đã xảy ra lỗi khi thêm dịch vụ');
         }
     };
 

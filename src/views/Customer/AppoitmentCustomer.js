@@ -50,36 +50,65 @@ const AppointmentCustomer = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#F5EFFF',
+    },
+    header: {
+        backgroundColor: '#A594F9',
+        padding: 20,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        elevation: 5,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
-        paddingTop: 20
+        color: '#F5EFFF',
+        textAlign: 'center',
+        marginTop: 10,
+    },
+    listContainer: {
+        padding: 20,
     },
     item: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 15,
         padding: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        flexDirection: 'column', 
+        marginBottom: 15,
+        elevation: 2,
+        borderLeftWidth: 5,
+        borderLeftColor: '#CDC1FF',
     },
     bookingText: {
         fontSize: 16,
-        marginBottom: 5,
+        marginBottom: 8,
+        color: '#333',
+    },
+    serviceTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#A594F9',
+        marginBottom: 10,
+    },
+    dateTimeContainer: {
+        backgroundColor: '#F5EFFF',
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 10,
+    },
+    dateTimeText: {
+        fontSize: 14,
+        color: '#666',
     },
     deleteButton: {
-        backgroundColor: 'red',
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-
+        backgroundColor: '#A594F9',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        alignSelf: 'flex-end',
+        marginTop: 10,
     },
     deleteButtonText: {
-        color: 'white',
+        color: '#F5EFFF',
         fontWeight: 'bold',
     },
 });
