@@ -78,7 +78,7 @@ const HomeScreenCustomer = ({ navigation, route }) => {
                 </View>
                 <View style={styles.priceContainer}>
                     <Text style={styles.priceText}>{item.prices}</Text>
-                    <Text style={styles.currencyText}>VND</Text>
+                    <Text style={styles.currencyText}>VNĐ</Text>
                 </View>
             </View>
         </TouchableOpacity>

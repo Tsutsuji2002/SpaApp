@@ -69,7 +69,7 @@ export default function Login({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#F5EFFF' }}>
             <KeyboardAwareScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
                 keyboardShouldPersistTaps="handled">
@@ -129,12 +129,12 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: 24,
         paddingHorizontal: 0,
-        backgroundColor: '#e8ecf4',
+        backgroundColor: '#F5EFFF',
     },
     title: {
         fontSize: 31,
         fontWeight: '700',
-        color: '#FFC0CB',
+        color: '#A594F9',
         marginBottom: 6,
     },
     /** Header */
@@ -179,14 +179,14 @@ const styles = StyleSheet.create({
     },
     inputControl: {
         height: 50,
-        backgroundColor: '#fff',
+        backgroundColor: '#E5D9F2',
         paddingHorizontal: 16,
         borderRadius: 12,
         fontSize: 15,
         fontWeight: '500',
         color: '#222',
         borderWidth: 1,
-        borderColor: '#C9D3DB',
+        borderColor: '#CDC1FF',
         borderStyle: 'solid',
     },
     btn: {
@@ -197,11 +197,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderWidth: 1,
-        backgroundColor: '#C9D3DB',
+        backgroundColor: '#CDC1FF',
     },
     btnText: {
         fontSize: 18,
         lineHeight: 26,
         fontWeight: '600',
+        color: '#0B192C',
     },
 });

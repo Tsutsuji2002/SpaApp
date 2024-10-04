@@ -58,7 +58,7 @@ const AddNewServices = ({ navigation }) => {
                 });
 
             Alert.alert('Success', 'Dịch vụ đã được thêm thành công');
-            navigation.navigate('Home');
+            navigation.navigate('HomeScreen');
         } catch (error) {
             console.error('Error adding service:', error);
             Alert.alert('Error', 'Đã xảy ra lỗi khi thêm dịch vụ');

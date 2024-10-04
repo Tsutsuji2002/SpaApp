@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useFocusEffect } from '@react-navigation/native';
 import AddNewServices from './AddNewServices';
 import ServiceDetails from './ServiceDetails';
 import Profile from './Profile';
@@ -15,46 +16,51 @@ const HomeScreen = ({ navigation, route }) => {
     
     console.log("HomeScreen userEmail:", userEmail); // Debug log
 
-    useEffect(() => {
-        const fetchServices = async () => {
-            try {
-                const servicesSnapshot = await firestore().collection('services').get();
-                const servicesData = servicesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setServices(servicesData);
-            } catch (error) {
-                console.error('Error fetching services:', error);
+    const fetchServices = useCallback(async () => {
+        try {
+            const servicesSnapshot = await firestore().collection('services').get();
+            const servicesData = servicesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setServices(servicesData);
+        } catch (error) {
+            console.error('Error fetching services:', error);
+        }
+    }, []);
+
+    const fetchUserData = useCallback(async () => {
+        if (!userEmail) {
+            console.log('No user email provided');
+            return;
+        }
+
+        try {
+            console.log('Fetching user data for email:', userEmail); // Debug log
+            const userSnapshot = await firestore()
+                .collection('user')
+                .where('email', '==', userEmail)
+                .get();
+
+            if (!userSnapshot.empty) {
+                const userData = userSnapshot.docs[0].data();
+                console.log('Found user data:', userData); // Debug log
+                setUsername(userData.name);
+            } else {
+                console.log('User document does not exist for email:', userEmail);
+                setUsername('User');
             }
-        };
-
-        const fetchUserData = async () => {
-            if (!userEmail) {
-                console.log('No user email provided');
-                return;
-            }
-
-            try {
-                console.log('Fetching user data for email:', userEmail); // Debug log
-                const userSnapshot = await firestore()
-                    .collection('user')
-                    .where('email', '==', userEmail)
-                    .get();
-
-                if (!userSnapshot.empty) {
-                    const userData = userSnapshot.docs[0].data();
-                    console.log('Found user data:', userData); // Debug log
-                    setUsername(userData.name);
-                } else {
-                    console.log('User document does not exist for email:', userEmail);
-                    setUsername('User');
-                }
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-
-        fetchServices();
-        fetchUserData();
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
     }, [userEmail]);
+
+    useEffect(() => {
+        fetchUserData();
+    }, [fetchUserData]);
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchServices();
+        }, [fetchServices])
+    );
 
     const handleServicePress = (service) => {
         navigation.navigate('ServiceDetails', { service, userEmail });
@@ -64,7 +70,7 @@ const HomeScreen = ({ navigation, route }) => {
         <TouchableOpacity style={styles.input} onPress={() => handleServicePress(item)}>
             <View style={styles.itemContainer}>
                 <Text>{item.service}</Text>
-                <Text>{item.prices}</Text>
+                <Text>{item.prices} VNĐ</Text>
             </View>
         </TouchableOpacity>
     );
@@ -202,6 +208,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 15,
+        color: '#0B192C'
     },
 });
 
