@@ -27,7 +27,7 @@ const Booking = ({ route }) => {
                 createdAt: firestore.FieldValue.serverTimestamp(),
             });
             Alert.alert('Thông báo', 'Đặt lịch thành công');
-            navigation.navigate('HomeCustomer');
+            navigation.navigate('HomeScreenCustomer');
         } catch (error) {
             Alert.alert('Error', 'Failed to save booking');
         }
